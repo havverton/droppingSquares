@@ -7,7 +7,7 @@ var square = new Object();
 square.color = "#000";
 square.height = 50;
 square.width = 50;
-square.x = Math.floor(Math.random()*550);
+square.x = getX();
 square.y = 0;
 square.offsetY = 5;
 
@@ -17,9 +17,15 @@ ctx.fillStyle = square.color;
 
 game();
 
+function getX (){
+    x=Math.floor(Math.random()*550);
+    return x;
+}
+
+
 
 function game(){
-    setInterval(dropSquare(),100);
+
 
 }
 

@@ -7,43 +7,48 @@ var square = new Object();
 square.color = "#000";
 square.height = 50;
 square.width = 50;
-square.x = getX();
+square.x = getRandX();
 square.y = 0;
 square.offsetY = 5;
+square.delay =30;
 
 
-ctx.fillStyle = square.color;
 //ctx.fillRect(0,0,50,50);
 
-game();
-
-function getX (){
-    x=Math.floor(Math.random()*550);
+function getRandX(){
+    var x=Math.floor(Math.random()*550);
     return x;
 }
 
 
-
-function game(){
-
-
+function startGame(){
+    setInterval(dropSquare(square.x), 1000);
 }
 
+startGame();
 
- function dropSquare(){
+
+
+
+function dropSquare(n){
     
     var i=square.y;
-    var n=square.x;
         var timerId = setInterval(function () 
         {
-
-            ctx.clearRect(n-50,Math.abs(i)-50,n, i);
+            //отрисовка квадрата
+            ctx.fillStyle = square.color;
             ctx.fillRect(n,i,square.height, square.width);
+            
+            //очистка квадрата
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(square.x,i-50,50,50)
+
             i+=square.offsetY;
 
         }
-            , 30);
-     
+            ,square.delay);
+
+    // alert(n);
      
 
  }

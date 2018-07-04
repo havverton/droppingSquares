@@ -10,7 +10,7 @@ square.width = 50;
 square.x = getRandX();
 square.y = 0;
 square.offsetY = 5;
-square.delay =30;
+square.delay =getRandDelay();
 
 
 //ctx.fillRect(0,0,50,50);
@@ -20,12 +20,47 @@ function getRandX(){
     return x;
 }
 
-
-function startGame(){
-    setInterval(dropSquare(square.x), 1000);
+function getRandDelay(){
+    var x=Math.floor(Math.random()*(50-15))+15;
+    return x;
 }
 
-startGame();
+startGame( );
+
+function startGame(){
+    setInterval(function (){
+       
+       
+        var i=square.y;
+        var n=square.x;
+        var d=square.delay;
+                //Интервал падения
+                var timerId = setInterval(function () 
+                {
+                   
+                   //очистка квадрата
+                   ctx.fillStyle = "#fff";
+                   ctx.fillRect(n,i-50,50,50)
+
+                    //отрисовка квадрата
+                    ctx.fillStyle = square.color;
+                    ctx.fillRect(n,i,square.height, square.width);
+                    
+                    
+
+                    i+=square.offsetY;
+
+                }
+                    ,square.delay);
+                //Интервал падения
+        
+                square.x = getRandX();
+                square.delay =getRandDelay();}
+                
+        , 1000);
+}
+
+
 
 
 

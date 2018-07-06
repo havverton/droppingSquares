@@ -17,6 +17,7 @@ var clickY = 0;
 var isStart = false;
 var isRestart = false;
 var isClicked = false;
+var isDelete = false;
 
 cvs.onclick = function (event) {
     clickX = event.offsetX;
@@ -70,15 +71,23 @@ function Square(x, y, speed) {
     this.check = function () {  //проверка на совпадение клика и квадрата
         if (clickX >= this.x && clickX <= this.x + 50) {
             if (clickY <= this.y && clickY >= this.y - 50) {
-                this.y = y;
+                //this.y = y;
                 clickY = 0;
                 clickX = 0;
                 score++;
                 scoreTable.innerHTML = score;
+                isDelete = true;
+
             }
         }
     }
 
+    this.remove = function () {
+        if (isDelete) {
+            delete squares[i];
+            isDelete = false;
+        }
+    }
 }
 
 
@@ -90,30 +99,32 @@ function clearScreen() {
 }
 
 function game(isRestart) {
-        this.isRestart = isRestart;
+    this.isRestart = isRestart;
 
+    for (var i = 0; i < 10; i++) {
+        squares[i] = new Square(getRandX(), getRandY(), getRandSpeed(1, 3));
+    }
+
+    clearScreen();
+
+    var timerId = setInterval(function () {
         for (var i = 0; i < 10; i++) {
-            squares[i] = new Square(getRandX(), getRandY(), getRandSpeed(5, 8));
+            squares[i].check();
+            squares[i].fall();
+            squares[i].draw();
+            squares[i].remove(i);
         }
+    }, fps);
 
-        clearScreen();
+    if (isRestart) {
+        clearInterval(timerId);
+        score = 0;
+        scoreTable.innerHTML = score;
+        i = 0;
 
-       var timerId = setInterval(function () {
-            for (var i = 0; i < 10; i++) {
-                squares[i].check();
-                squares[i].fall();
-                squares[i].draw();
-            }
-        }, fps);
-
-        if(isRestart){
-            clearInterval(timerId);
-            score=0;
-            scoreTable.innerHTML = score;
-            i=0;
-            game(!isRestart);
-        }
-     isStart = true;
+        game(!isRestart);
+    }
+    isStart = true;
 }
 
 
@@ -134,12 +145,12 @@ function getRandSpeed(a, b) {
 }
 
 startButton.onclick = function () {
-    if(!isStart) {
+    if (!isStart) {
         game(isRestart);
     }
 }
 
 restartButton.onclick = function () {
     game(!isRestart);
-    
+
 }

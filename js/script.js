@@ -1,19 +1,37 @@
 var cvs = document.getElementById("canvas");
 var ctx = cvs.getContext("2d");
 
+var scoreTable = document.getElementById("score");
+var startButton = document.getElementById("start");
+var restartButton = document.getElementById("restart");
+
 var fps = 1000 / 60;
 var squares = [50];
 var lastX = 0;
 var lastY = 0;
+var score = 0;
 
+var clickX = 0;
+var clickY = 0;
 
-function Square(x, y) {
+var isStart = false;
+var isRestart = false;
+var isClicked = false;
+
+cvs.onclick = function (event) {
+    clickX = event.offsetX;
+    clickY = event.offsetY;
+}
+
+function Square(x, y, speed) {
     this.width = 50;
     this.height = 50;
     this.color = "#000";
-    this.speed = getRandSpeed(5, 8);
+    this.speed = speed;
     this.x;
+    this.Xmax;
     this.y;
+    this.Ymax;
 
     if (x <= lastX || x >= lastX + 50) {
         lastX = x;
@@ -38,6 +56,7 @@ function Square(x, y) {
             this.y = y;
         }
     }
+
     //отрисовка
     this.draw = function () {
         ctx.fillRect(this.x, this.y, this.height, this.width);
@@ -46,6 +65,18 @@ function Square(x, y) {
     //смена цвета
     this.changeColor = function (color) {
         ctx.fillStyle = color;
+    }
+
+    this.check = function () {  //проверка на совпадение клика и квадрата
+        if (clickX >= this.x && clickX <= this.x + 50) {
+            if (clickY <= this.y && clickY >= this.y - 50) {
+                this.y = y;
+                clickY = 0;
+                clickX = 0;
+                score++;
+                scoreTable.innerHTML = score;
+            }
+        }
     }
 
 }
@@ -58,20 +89,34 @@ function clearScreen() {
     }, fps)
 }
 
-function game() {
-    for (var i = 0; i < 10; i++) {
-        squares[i] = new Square(getRandX(), getRandY());
-    }
+function game(isRestart) {
+        this.isRestart = isRestart;
 
-    clearScreen();
-
-    setInterval(function () {
         for (var i = 0; i < 10; i++) {
-            squares[i].fall();
-            squares[i].draw();
+            squares[i] = new Square(getRandX(), getRandY(), getRandSpeed(5, 8));
         }
-    }, fps);
+
+        clearScreen();
+
+       var timerId = setInterval(function () {
+            for (var i = 0; i < 10; i++) {
+                squares[i].check();
+                squares[i].fall();
+                squares[i].draw();
+            }
+        }, fps);
+
+        if(isRestart){
+            clearInterval(timerId);
+            score=0;
+            scoreTable.innerHTML = score;
+            i=0;
+            game(!isRestart);
+        }
+     isStart = true;
 }
+
+
 
 function getRandX() {
     var x = Math.floor(Math.random() * 550);
@@ -88,4 +133,13 @@ function getRandSpeed(a, b) {
     return x;
 }
 
-game();
+startButton.onclick = function () {
+    if(!isStart) {
+        game(isRestart);
+    }
+}
+
+restartButton.onclick = function () {
+    game(!isRestart);
+    
+}

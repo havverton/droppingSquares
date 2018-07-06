@@ -8,7 +8,7 @@ var restartButton = document.getElementById("restart");
 var fps = 1000 / 60;
 var squares = [10];
 var colors = ["#000", "#ff0000", "#00ff00", "#0000ff"];
-var color ;
+var color;
 var lastX = 0;
 var lastY = 0;
 var score = 0;
@@ -26,7 +26,7 @@ cvs.onclick = function (event) {
     clickY = event.offsetY;
 }
 
-function Square(x, y, speed,color) {
+function Square(x, y, speed, color) {
     this.width = 50;
     this.height = 50;
     this.color = color;
@@ -35,8 +35,8 @@ function Square(x, y, speed,color) {
     this.Xmax;
     this.y;
     this.Ymax;
-   
-  
+
+
 
     if (x <= lastX || x >= lastX + 50) {
         lastX = x;
@@ -69,7 +69,7 @@ function Square(x, y, speed,color) {
 
     }
     //смена цвета
- 
+
 
     this.check = function () {  //проверка на совпадение клика и квадрата
         if (clickX >= this.x && clickX <= this.x + 50) {
@@ -86,10 +86,10 @@ function Square(x, y, speed,color) {
     }
 
     this.remove = function (i) {
-        if(isDelete){
-        var square = new Square(getRandX(), getRandY(), getRandSpeed(1, 3), getRandColor());
-        squares.splice(i,1, square);
-        isDelete = false;
+        if (isDelete) {
+            var square = new Square(getRandX(), getRandY(), getRandSpeed(1, 3), getRandColor());
+            squares.splice(i, 1, square);
+            isDelete = false;
         }
     }
 }
@@ -105,23 +105,14 @@ function clearScreen() {
 function game(isRestart) {
     this.isRestart = isRestart;
 
-    for (var i = 0; i <10; i++) {
+    for (var i = 0; i < 10; i++) {
         squares[i] = new Square(getRandX(), getRandY(), getRandSpeed(1, 3), getRandColor());
-        
+
     }
 
-  //  clearScreen();
+    //  clearScreen();
 
-    var timerId = setInterval(function () {
-        ctx.clearRect(0, 0, 600, 600);
-        for (var i = 0; i < 10; i++) {
-            squares[i].check();
-            squares[i].fall();
-            squares[i].draw();
-            squares[i].remove(i);
-            
-        }
-    }, fps);
+    var timerId = requestAnimationFrame(drawing);
 
     if (isRestart) {
         score = 0;
@@ -133,6 +124,18 @@ function game(isRestart) {
     isStart = true;
 }
 
+function drawing() {
+    requestAnimationFrame(drawing);
+    ctx.clearRect(0, 0, 600, 600);
+    for (var i = 0; i < 10; i++) {
+        squares[i].check();
+        squares[i].fall();
+        squares[i].draw();
+        squares[i].remove(i);
+
+
+    }
+}
 
 
 function getRandX() {
@@ -152,7 +155,7 @@ function getRandSpeed(a, b) {
 
 function getRandColor() {
     var x = Math.floor(Math.random() * (3 - 0)) + 0;
-    
+
     return colors[x];
 }
 

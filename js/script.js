@@ -6,7 +6,7 @@ var startButton = document.getElementById("start");
 var restartButton = document.getElementById("restart");
 
 var fps = 1000 / 60;
-var squares = [50];
+var squares = [10];
 var colors = ["#000", "#ff0000", "#00ff00", "#0000ff"];
 var color ;
 var lastX = 0;
@@ -105,24 +105,25 @@ function clearScreen() {
 function game(isRestart) {
     this.isRestart = isRestart;
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i <10; i++) {
         squares[i] = new Square(getRandX(), getRandY(), getRandSpeed(1, 3), getRandColor());
         
     }
 
-    clearScreen();
+  //  clearScreen();
 
     var timerId = setInterval(function () {
+        ctx.clearRect(0, 0, 600, 600);
         for (var i = 0; i < 10; i++) {
             squares[i].check();
             squares[i].fall();
             squares[i].draw();
             squares[i].remove(i);
+            
         }
     }, fps);
 
     if (isRestart) {
-        clearInterval(timerId);
         score = 0;
         scoreTable.innerHTML = score;
         i = 0;

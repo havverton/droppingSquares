@@ -7,7 +7,7 @@ var restartButton = document.getElementById("restart");
 
 var fps = 1000 / 60;
 var squares = [50];
-var colors = ["\"#000\"", "\"#ff0000\"", "\"#00ff00\"", "\"#0000ff\""];
+var colors = ["#000", "#ff0000", "#00ff00", "#0000ff"];
 var color ;
 var lastX = 0;
 var lastY = 0;
@@ -35,7 +35,7 @@ function Square(x, y, speed,color) {
     this.Xmax;
     this.y;
     this.Ymax;
-    ctx.fillStyle = this.color;
+   
   
 
     if (x <= lastX || x >= lastX + 50) {
@@ -85,10 +85,11 @@ function Square(x, y, speed,color) {
         }
     }
 
-    this.remove = function () {
-        if (isDelete) {
-            delete squares[i];
-            isDelete = false;
+    this.remove = function (i) {
+        if(isDelete){
+        var square = new Square(getRandX(), getRandY(), getRandSpeed(1, 3), getRandColor());
+        squares.splice(i,1, square);
+        isDelete = false;
         }
     }
 }
@@ -105,7 +106,7 @@ function game(isRestart) {
     this.isRestart = isRestart;
 
     for (var i = 0; i < 10; i++) {
-        squares[i] = new Square(getRandX(), getRandY(), getRandSpeed(1, 3)), getRandColor();
+        squares[i] = new Square(getRandX(), getRandY(), getRandSpeed(1, 3), getRandColor());
         
     }
 
